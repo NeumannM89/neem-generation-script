@@ -6,8 +6,11 @@ import threading
 
 
 mongo_command = 'docker restart mongo_db'
-sandbox_command = 'roslaunch cram_pr2_pick_place_demo sandbox.launch'
+sandbox_command = 'roslaunch urobosim_ros_config world.launch'
+rosbridge_command = 'roslaunch rosbridge_server rosbridge_websocket.launch'
+# sandbox_command = 'roslaunch cram_pr2_pick_place_demo sandbox.launch'
 knowrob_command = 'roslaunch knowrob knowrob.launch'
+giskard_command = 'roslaunch giskardpy giskardpy_pr2_unreal.launch'
 generation_command = 'roslaunch cram_sim_log_generator neem-generation.launch'
 
 
@@ -24,6 +27,19 @@ def start_mongo_db():
   mongo_process.wait()
   print 'Restarted mongo'
 
+def start_rosbridge_server():
+  global rosbridge_process
+  print 'Restarting rosbridge ...'
+  rosbridge_process = subprocess.Popen(rosbridge_command.split(), bufsize=1, universal_newlines=True)
+  rosbridge_process.wait()
+  print 'Restarted rosbridge'
+
+def start_giskard():
+  global giskard_process
+  print 'Restarting giskard ...'
+  giskard_process = subprocess.Popen(giskard_command.split(), bufsize=1, universal_newlines=True)
+  time.sleep(20)
+  print 'Restarted giskard'
 
 def start_sandbox_():
   global sandbox_process
@@ -57,8 +73,10 @@ def start_neem_process():
 while True:
   try:
     print "start neem process"
-    start_mongo_db()
-    start_sandbox_()
+    # start_mongo_db()
+    # start_rosbridge_server()
+    # start_sandbox_()
+    start_giskard()
     start_knowrob_()
     start_neem_process()
     print ''
@@ -70,7 +88,3 @@ print "Finished"
 
 #output, error = process.communicate()
 #print output
-
-
-
-    
